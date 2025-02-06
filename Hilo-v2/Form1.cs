@@ -16,7 +16,7 @@ namespace Hilo_v2
         public Form1()
         {
             InitializeComponent();
-            
+            listView4.SetDoubleBuffered(true);
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
             
         }
@@ -289,6 +289,10 @@ namespace Hilo_v2
                     betitem.BackColor = Color.White;
                 }
                 listView4.Items.Insert(0, betitem);
+                if (listView4.Items.Count > 45)
+                {
+                    listView4.Items[listView4.Items.Count - 1].Remove();
+                }
 
             }
             else if(response.data.hiloNext != null)
@@ -301,6 +305,10 @@ namespace Hilo_v2
                 var betitem = new ListViewItem(row);
                 betitem.Font = new Font("Consolas", 10f);
                 listView4.Items.Insert(0, betitem);
+                if (listView4.Items.Count > 45)
+                {
+                    listView4.Items[listView4.Items.Count - 1].Remove();
+                }
             }
         }
         private void SetToken(string apikey)
@@ -2355,6 +2363,22 @@ namespace Hilo_v2
         {
             UserAgent = textBox4.Text;
             Properties.Settings.Default.Agent = UserAgent;
+        }
+ 
+    }
+    public static class ListViewExtensions
+    {
+        /// <summary>
+        /// Sets the double buffered property of a list view to the specified value
+        /// </summary>
+        /// <param name="listView">The List view</param>
+        /// <param name="doubleBuffered">Double Buffered or not</param>
+        public static void SetDoubleBuffered(this System.Windows.Forms.ListView listView, bool doubleBuffered = true)
+        {
+            listView
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                .SetValue(listView, doubleBuffered, null);
         }
     }
 }
