@@ -338,8 +338,13 @@ namespace Hilo_v2
             "stake.games",
             "stake.bet",
             "staketr.com",
-            "staketr2.com",
-            "staketr3.com"});
+            "stake1021.com",
+            "stake.ac",
+            "stake.pet",
+            "stake.mba",
+            "stake.ceo",
+            "stake.bz",
+            "stake.jp"});
             this.comboBox1.Location = new System.Drawing.Point(642, 292);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox1.Name = "comboBox1";
