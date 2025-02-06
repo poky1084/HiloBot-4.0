@@ -12,7 +12,7 @@ namespace Hilo_v2.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.2.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.11.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -622,19 +622,136 @@ namespace Hilo_v2.Properties {
                 this["resetBaselosestreakOf"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AutoCard
-        {
-            get
-            {
-                return ((bool)(this["autoCard"]));
+        public bool ResetBaseLossamountCheck {
+            get {
+                return ((bool)(this["ResetBaseLossamountCheck"]));
             }
-            set
-            {
-                this["autoCard"] = value;
+            set {
+                this["ResetBaseLossamountCheck"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ResetBaseWinamountCheck {
+            get {
+                return ((bool)(this["ResetBaseWinamountCheck"]));
+            }
+            set {
+                this["ResetBaseWinamountCheck"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal resetBaseLossamountOf {
+            get {
+                return ((decimal)(this["resetBaseLossamountOf"]));
+            }
+            set {
+                this["resetBaseLossamountOf"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal resetBaseWinamountOf {
+            get {
+                return ((decimal)(this["resetBaseWinamountOf"]));
+            }
+            set {
+                this["resetBaseWinamountOf"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal StopAfterWinsOf {
+            get {
+                return ((decimal)(this["StopAfterWinsOf"]));
+            }
+            set {
+                this["StopAfterWinsOf"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal StopAfterWinstreakOf {
+            get {
+                return ((decimal)(this["StopAfterWinstreakOf"]));
+            }
+            set {
+                this["StopAfterWinstreakOf"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal StopAfterLossesOf {
+            get {
+                return ((decimal)(this["StopAfterLossesOf"]));
+            }
+            set {
+                this["StopAfterLossesOf"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal StopAfterLosestreakOf {
+            get {
+                return ((decimal)(this["StopAfterLosestreakOf"]));
+            }
+            set {
+                this["StopAfterLosestreakOf"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoCard {
+            get {
+                return ((bool)(this["AutoCard"]));
+            }
+            set {
+                this["AutoCard"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Cookie {
+            get {
+                return ((string)(this["Cookie"]));
+            }
+            set {
+                this["Cookie"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Agent {
+            get {
+                return ((string)(this["Agent"]));
+            }
+            set {
+                this["Agent"] = value;
             }
         }
     }

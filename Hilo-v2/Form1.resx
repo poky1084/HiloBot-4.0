@@ -119,6 +119,7 @@
   </resheader>
   <data name="textBox2.Text" xml:space="preserve">
     <value>Fill the box at Login button with your API key or token.
+Paste cf_clearance cookie and User-Agent text into the bottom inputs
 
 Numbers that can be used at Hilo Bot. (fill the patterns)
 Type numbers separated by comma. (e.g 5,5,5)
@@ -133,9 +134,6 @@ Number 7 for Skip.
 Rank: A,2,3,4,5,6,7,8,9,10,J,Q,K
 Suit: H, C, D, S 
 In Pattern write numbers 0-7. Example: 2,4,5,5,1,0,7
-
-All instructions is on forum:
-https://forum.stake.com/topic/44407-hilo-bot-made-for-hunters/
 
 Odds: (%)
 A - 92,30

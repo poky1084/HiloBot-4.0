@@ -20,8 +20,12 @@ namespace Hilo_v2
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
             
         }
+        CookieContainer cc = new CookieContainer();
+        private string UserAgent = "";
+        private string ClearanceCookie = "";
+
         string token = "";
-        string mirror = "https://api.stake.com/graphql";
+        string mirror = "https://stake.com/_api/graphql";
         bool loggedin = false;
         int run = 0;
         decimal profitall = 0;
@@ -65,13 +69,34 @@ namespace Hilo_v2
         List<string> currency = new List<string>();
         decimal balance = 0;
         int currencyindex = 0;
+
+        int stopafterwinsof = 0;
+        int stopafterlossesof = 0;
+        int stopafterwinstreak = 0;
+        int stopafterlosestreak = 0;
         private void Application_ApplicationExit(object sender, EventArgs e)
         { 
             
             Properties.Settings.Default.Save();
 
         }
-
+        private void ResetCounters()
+        {
+            stopafterbets = 0;
+            stopafterwinsof = 0;
+            stopafterlossesof = 0;
+            stopafterwinstreak = 0;
+            stopafterlosestreak = 0;
+            baseafterwinsof = 0;
+            baseafterwinstreaks = 0;
+            baseafterlossesof = 0;
+            baseafterlosestreaks = 0;
+            incrafterbet = 0;
+            incrafterlosses = 0;
+            incrafterlosestreaks = 0;
+            incrafterwinsof = 0;
+            incrafterwinstreaks = 0;
+        }
         private bool RegexPattern(string pattern)
         {
             return (System.Text.RegularExpressions.Regex.IsMatch(pattern, "^[0-7]+(,[0-7]+)*$"));
@@ -287,10 +312,12 @@ namespace Hilo_v2
             var url = mirror;
             var request = new RestRequest(Method.POST);
             var client = new RestClient(url);
+            client.CookieContainer = cc;
+            client.UserAgent = UserAgent;
+            client.CookieContainer.Add(new Cookie("cf_clearance", ClearanceCookie, "/", comboBox1.Text));
             Payload payload = new Payload();
-            payload.operationName = "initialUserRequest";
-            payload.variables = new betobj() { };
-            payload.query = "query initialUserRequest {\n  user {\n    ...UserAuth\n    __typename\n  }\n}\n\nfragment UserAuth on User {\n  id\n  name\n  email\n  hasPhoneNumberVerified\n  hasEmailVerified\n  hasPassword\n  intercomHash\n  createdAt\n  hasTfaEnabled\n  mixpanelId\n  hasOauth\n  isKycBasicRequired\n  isKycExtendedRequired\n  isKycFullRequired\n  kycBasic {\n    id\n    status\n    __typename\n  }\n  kycExtended {\n    id\n    status\n    __typename\n  }\n  kycFull {\n    id\n    status\n    __typename\n  }\n  flags {\n    flag\n    __typename\n  }\n  roles {\n    name\n    __typename\n  }\n  balances {\n    ...UserBalanceFragment\n    __typename\n  }\n  activeClientSeed {\n    id\n    seed\n    __typename\n  }\n  previousServerSeed {\n    id\n    seed\n    __typename\n  }\n  activeServerSeed {\n    id\n    seedHash\n    nextSeedHash\n    nonce\n    blocked\n    __typename\n  }\n  __typename\n}\n\nfragment UserBalanceFragment on UserBalance {\n  available {\n    amount\n    currency\n    __typename\n  }\n  vault {\n    amount\n    currency\n    __typename\n  }\n  __typename\n}\n";
+            payload.operationName = "UserBalances";
+            payload.query = "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n";
             request.AddHeader("Content-Type", "application/json");
             request.AddHeader("x-access-token", token);
 
@@ -377,6 +404,9 @@ namespace Hilo_v2
             var url = mirror;
             var request = new RestRequest(Method.POST);
             var client = new RestClient(url);
+            client.CookieContainer = cc;
+            client.UserAgent = UserAgent;
+            client.CookieContainer.Add(new Cookie("cf_clearance", ClearanceCookie, "/", comboBox1.Text));
             Payload payload = new Payload();
             payload.operationName = "HiloActiveBet";
             payload.variables = new betobj() { };
@@ -522,6 +552,9 @@ namespace Hilo_v2
                 var url = mirror;
                 var request = new RestRequest(Method.POST);
                 var client = new RestClient(url);
+                client.CookieContainer = cc;
+                client.UserAgent = UserAgent;
+                client.CookieContainer.Add(new Cookie("cf_clearance", ClearanceCookie, "/", comboBox1.Text));
                 Payload payload = new Payload();
                 payload.operationName = "HiloBet";
                 payload.variables = new betobj()
@@ -652,6 +685,9 @@ namespace Hilo_v2
                 var url = mirror;                
                 var request = new RestRequest(Method.POST);
                 var client = new RestClient(url);
+                client.CookieContainer = cc;
+                client.UserAgent = UserAgent;
+                client.CookieContainer.Add(new Cookie("cf_clearance", ClearanceCookie, "/", comboBox1.Text));
                 Payload payload = new Payload();
                 payload.operationName = "HiloNext";
                 payload.variables = new betobj()
@@ -806,6 +842,9 @@ namespace Hilo_v2
                                 baseafterlossesof++;
                                 incrafterlosestreaks++;
                                 baseafterlosestreaks++;
+                                stopafterlosestreak++;
+                                stopafterwinstreak = 0;
+                                stopafterlossesof++;
                                 BetList(response);
                                 ClearCards();
                                 //profitall -= response.data.hiloNext.amount;
@@ -840,8 +879,22 @@ namespace Hilo_v2
                                 {
                                     await RotateSeed();
                                 }
-                                if(response.data.hiloNext.amount >= stopLossBet.Value && stopLossBet.Value > 0)
+                                if (response.data.hiloNext.amount >= resetBaseLossamountOf.Value && ResetBaseLossamountCheck.Checked == true)
                                 {
+                                    betamount = BaseBetAmount.Value;
+                                }
+                                if (stopafterlosestreak >= StopAfterLosestreakOf.Value && StopAfterLosestreakOf.Value > 0)
+                                {
+                                    stopafterlosestreak = 0;
+                                    run = 0;
+                                }
+                                if (response.data.hiloNext.amount >= stopLossBet.Value && stopLossBet.Value > 0)
+                                {
+                                    run = 0;
+                                }
+                                if (stopafterlossesof >= StopAfterLossesOf.Value && StopAfterLossesOf.Value > 0)
+                                {
+                                    stopafterlossesof = 0;
                                     run = 0;
                                 }
                                 HiloBet();
@@ -899,6 +952,9 @@ namespace Hilo_v2
             var url = mirror;
             var request = new RestRequest(Method.POST);
             var client = new RestClient(url);
+            client.CookieContainer = cc;
+            client.UserAgent = UserAgent;
+            client.CookieContainer.Add(new Cookie("cf_clearance", ClearanceCookie, "/", comboBox1.Text));
             Payload payload = new Payload();
             payload.operationName = "HiloCashout";
             payload.variables = new betobj()
@@ -951,7 +1007,14 @@ namespace Hilo_v2
                         baseafterlosestreaks = 0;
                         incrafterlosestreaks = 0;
                         baseafterwinstreaks++;
+
+                        incrafterwinsof++;
+                        incrafterlosestreaks = 0;
                         incrafterwinstreaks++;
+
+                        stopafterwinsof++;
+                        stopafterlosestreak = 0;
+                        stopafterwinstreak++;
 
                         profitall += response.data.hiloCashout.payout;
                         UpdateStats();
@@ -1373,6 +1436,9 @@ namespace Hilo_v2
             var url = mirror;
             var request = new RestRequest(Method.POST);
             var client = new RestClient(url);
+            client.CookieContainer = cc;
+            client.UserAgent = UserAgent;
+            client.CookieContainer.Add(new Cookie("cf_clearance", ClearanceCookie, "/", comboBox1.Text));
             Payload payload = new Payload();
             payload.operationName = "HiloBet";
             payload.variables = new betobj()
@@ -1452,6 +1518,9 @@ namespace Hilo_v2
             var url = mirror;
             var request = new RestRequest(Method.POST);
             var client = new RestClient(url);
+            client.CookieContainer = cc;
+            client.UserAgent = UserAgent;
+            client.CookieContainer.Add(new Cookie("cf_clearance", ClearanceCookie, "/", comboBox1.Text));
             Payload payload = new Payload();
             payload.operationName = "HiloNext";
             payload.variables = new betobj()
@@ -1554,6 +1623,9 @@ namespace Hilo_v2
             var url = mirror;
             var request = new RestRequest(Method.POST);
             var client = new RestClient(url);
+            client.CookieContainer = cc;
+            client.UserAgent = UserAgent;
+            client.CookieContainer.Add(new Cookie("cf_clearance", ClearanceCookie, "/", comboBox1.Text));
             Payload payload = new Payload();
             payload.operationName = "HiloCashout";
             payload.variables = new betobj()
@@ -1667,6 +1739,9 @@ namespace Hilo_v2
             var url = mirror;
             var request = new RestRequest(Method.POST);
             var client = new RestClient(url);
+            client.CookieContainer = cc;
+            client.UserAgent = UserAgent;
+            client.CookieContainer.Add(new Cookie("cf_clearance", ClearanceCookie, "/", comboBox1.Text));
             Payload payload = new Payload();
             payload.operationName = "RotateSeedPair";
             payload.variables = new betobj()
@@ -1869,6 +1944,9 @@ namespace Hilo_v2
             ResetBaseLossesCheck.Checked = Properties.Settings.Default.ResetBaseLossesCheck;
             RestBaseLosestreakCheck.Checked = Properties.Settings.Default.RestBaseLosestreakCheck;
             resetBaselosestreakOf.Value = Properties.Settings.Default.resetBaselosestreakOf;
+
+            textBox3.Text = Properties.Settings.Default.Cookie;
+            textBox4.Text = Properties.Settings.Default.Agent;
         }
 
        
@@ -2000,7 +2078,7 @@ namespace Hilo_v2
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.Mirror = comboBox1.Text;
-            mirror = "https://api." + comboBox1.Text + "/graphql";
+            mirror = "https://" + comboBox1.Text + "/_api/graphql";
             AddLog("Site changed to: " + comboBox1.Text);
         }
 
@@ -2225,6 +2303,58 @@ namespace Hilo_v2
         private void listView4_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+        private void ResetBaseLossamountCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            //Properties.Settings.Default.ResetBaseLossamountCheck = ResetBaseLossamountCheck.Checked;
+        }
+        private void resetBaseLossamountOf_ValueChanged(object sender, EventArgs e)
+        {
+            //Properties.Settings.Default.resetBaseLossamountOf = resetBaseLossamountOf.Value;
+        }
+        private void ResetBaseWinamountCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            //Properties.Settings.Default.ResetBaseWinamountCheck = ResetBaseWinamountCheck.Checked;
+        }
+        private void resetBaseWinamountOf_ValueChanged(object sender, EventArgs e)
+        {
+            //Properties.Settings.Default.resetBaseWinamountOf = resetBaseWinamountOf.Value;
+        }
+        private void StopAfterWinsOf_ValueChanged(object sender, EventArgs e)
+        {
+            //Properties.Settings.Default.StopAfterWinsOf = StopAfterWinsOf.Value;
+        }
+        private void StopAfterWinstreakOf_ValueChanged(object sender, EventArgs e)
+        {
+            //Properties.Settings.Default.StopAfterWinstreakOf = StopAfterWinstreakOf.Value;
+        }
+        private void StopAfterLossesOf_ValueChanged(object sender, EventArgs e)
+        {
+            //Properties.Settings.Default.StopAfterLossesOf = StopAfterLossesOf.Value;
+        }
+        private void StopAfterLosestreakOf_ValueChanged(object sender, EventArgs e)
+        {
+            //Properties.Settings.Default.StopAfterLosestreakOf = StopAfterLosestreakOf.Value;
+        }
+        private void ResetCounterLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ResetCounters();
+        }
+        private void ResetCountersLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ResetCounters();
+        }
+
+        private void textBox3_TextChanged_1(object sender, EventArgs e)
+        {
+            ClearanceCookie = textBox3.Text;
+            Properties.Settings.Default.Cookie = ClearanceCookie;
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            UserAgent = textBox4.Text;
+            Properties.Settings.Default.Agent = UserAgent;
         }
     }
 }
