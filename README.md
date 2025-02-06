@@ -6,6 +6,7 @@ HiloBot written for Hilo Stake original game.
 How to get clearance cookie and User-agent:<br />
 https://helpdesk.qbot.gg/hc/340888169/121/how-to-set-the-cloudflare-cf-clearance-cookie?category_id=30
 <br /><br />
+Video: https://cos.tv/videos/play/58799525604398080 <br />
 copy-paste the cf_clearance cookie into Cookie input<br />
 and paste User-Agent text into Agent input<br />
 <br />
